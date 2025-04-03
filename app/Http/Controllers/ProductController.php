@@ -3,13 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;
+use App\Repositories\ProductRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
+    protected $productRepository;
+
+    public function __construct(ProductRepositoryInterface $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
     public function index()
     {
-        $products = Product::all();
+        $products = $this->productRepository->paginate(12);
         $exchangeRate = $this->getExchangeRate();
 
         return view('products.list', compact('products', 'exchangeRate'));
@@ -18,15 +26,12 @@ class ProductController extends Controller
     public function show(Request $request)
     {
         $id = $request->route('product_id');
-        $product = Product::find($id);
+        $product = $this->productRepository->findOrFail($id);
         $exchangeRate = $this->getExchangeRate();
 
         return view('products.show', compact('product', 'exchangeRate'));
     }
 
-    /**
-     * @return float
-     */
     private function getExchangeRate()
     {
         try {
@@ -52,9 +57,9 @@ class ProductController extends Controller
                 }
             }
         } catch (\Exception $e) {
-
+            Log::error('Exchange rate API error: ' . $e->getMessage());
         }
 
-        return env('EXCHANGE_RATE', 0.85);
+        return config('app.default_exchange_rate', 0.85); // Use config instead of env
     }
 }
