@@ -34,6 +34,7 @@ class AdminController extends Controller
     public function products()
     {
         $products = Product::all();
+
         return view('admin.products', compact('products'));
     }
 
