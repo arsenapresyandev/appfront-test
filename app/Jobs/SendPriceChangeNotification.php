@@ -16,18 +16,20 @@ class SendPriceChangeNotification implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $product;
-    protected $oldPrice;
-    protected $newPrice;
-    protected $email;
+    protected Product $product;
+    protected float $oldPrice;
+    protected float $newPrice;
+    protected string $email;
 
     /**
      * Create a new job instance.
-     *
-     * @return void
      */
-    public function __construct($product, $oldPrice, $newPrice, $email)
-    {
+    public function __construct(
+        Product $product,
+        float $oldPrice,
+        float $newPrice,
+        string $email
+    ) {
         $this->product = $product;
         $this->oldPrice = $oldPrice;
         $this->newPrice = $newPrice;
@@ -36,10 +38,8 @@ class SendPriceChangeNotification implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         try {
             Log::info('Processing price change notification', [

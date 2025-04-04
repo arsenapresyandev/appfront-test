@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Jobs\SendPriceChangeNotification;
 use App\Models\Product;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
 
 class PriceChangeService
 {
@@ -22,7 +23,7 @@ class PriceChangeService
             return false;
         }
 
-        $notificationEmail = config('app.price_notification_email', 'admin@example.com');
+        $notificationEmail = Config::get('app.price_notification_email');
 
         try {
             SendPriceChangeNotification::dispatch(
