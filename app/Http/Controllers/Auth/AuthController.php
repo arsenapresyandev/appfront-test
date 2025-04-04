@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class LoginController extends Controller
+class AuthController extends Controller
 {
     /**
      * Show the login page.
@@ -19,16 +20,10 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($request->validated())) {
             $request->session()->regenerate();
-            // Change this line to redirect to the admin.products route instead of admin
             return redirect()->intended(route('admin.products.index'));
         }
 
@@ -47,4 +42,4 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
         return redirect('/');
     }
-}
+} 

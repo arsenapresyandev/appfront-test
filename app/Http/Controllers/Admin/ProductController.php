@@ -13,7 +13,7 @@ use App\Services\PriceChangeService;
 use App\Repositories\ProductRepositoryInterface;
 use App\Services\ImageService;
 
-class AdminController extends Controller
+class ProductController extends Controller
 {
     protected $productRepository;
     protected $priceChangeService;
@@ -109,4 +109,4 @@ class AdminController extends Controller
             return redirect()->route('admin.products.index')->with('error', 'Failed to delete product');
         }
     }
-}
+} 
