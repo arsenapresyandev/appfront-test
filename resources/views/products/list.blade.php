@@ -31,6 +31,8 @@
             <div class="product-card">
                 @if ($product->image)
                     <img src="{{ env('APP_URL') }}/{{ $product->image }}" class="product-image" alt="{{ $product->name }}">
+                @else
+                    <img src="{{ asset('product-placeholder.jpg') }}" class="product-image" alt="Default product image">
                 @endif
                 <div class="product-info">
                     <h2 class="product-title">{{ $product->name }}</h2>
