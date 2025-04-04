@@ -86,6 +86,8 @@
                 <td>
                     @if($product->image)
                         <img src="{{ env('APP_URL') }}/{{ $product->image }}" width="50" height="50" alt="{{ $product->name }}">
+                    @else
+                        <img src="{{ asset('product-placeholder.jpg') }}" width="50" height="50" alt="Default product image">
                     @endif
                 </td>
                 <td>{{ $product->name }}</td>

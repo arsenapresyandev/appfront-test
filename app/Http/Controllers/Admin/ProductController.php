@@ -34,7 +34,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = $this->productRepository->paginate(15);
+        $products = $this->productRepository->paginate();
         return view('admin.products', compact('products'));
     }
 
@@ -55,11 +55,8 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             $product->image = $this->imageService->uploadImage($request->file('image'));
-        } else {
-            $product->image = 'product-placeholder.jpg';
+            $product->save();
         }
-
-        $product->save();
 
         return redirect()->route('admin.products.index')->with('success', 'Product added successfully');
     }
@@ -79,8 +76,6 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, $id)
     {
         $product = $this->productRepository->findOrFail($id);
-
-        // Store the old price before updating
         $oldPrice = $product->price;
 
         $this->productRepository->update($product, $request->validated());
@@ -90,7 +85,6 @@ class ProductController extends Controller
             $product->save();
         }
 
-        // Check if price has changed and notify
         $this->priceChangeService->notifyPriceChange($product, $oldPrice, $product->price);
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully');
